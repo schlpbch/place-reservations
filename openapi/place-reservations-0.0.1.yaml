@@ -1,0 +1,256 @@
+openapi: 3.0.3
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/schlpbch/places-api/0.0.1
+info:
+  description: This is a simple API
+  version: 0.0.1
+  title: API to Reserve Places in an Inventory.
+  contact:
+    email: andreas.schlapbach@sbb.ch
+  license:
+    name: Apache 2.0
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+tags:
+  - name: place-reservationss
+    description: Operations available to handle place reservations.
+paths:
+  /place-reservations/:
+    get:
+      tags:
+        - place-reservations
+      summary: searches place reservations
+      operationId: search_place_reservation
+      description: |
+        By passing in the appropriate options, you can search for
+        available place reservations in an inventory.
+      parameters:
+        - name: Access-Token
+          in: header
+          description: >-
+            OAuth2 token used to authenticate the consumer API. Refer to the implementation documentation
+            for information on how to get a token.
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: searchString
+          description: pass an optional search string for place reservations.
+          required: false
+          schema:
+            type: string
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          required: true
+          description: ID of the place reservation to get.
+      responses:
+        "200":
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PlaceReservation"
+        "400":
+          description: bad input parameter
+        "404":
+          description: place reservation not found
+        "418":
+          description: I'm a tea pot, would you like a tea instead?
+    post:
+      tags:
+        - place-reservations
+      summary: creates a place reservation
+      operationId: create_place_reservation
+      description: Creates a place reservation in an inventory.
+      parameters:
+        - name: Access-Token
+          in: header
+          description: >-
+            OAuth2 token used to authenticate the consumer API. Refer to the implementation documentation
+            for information on how to get a token.
+          required: true
+          schema:
+            type: string
+      responses:
+        "201":
+          description: place reservation created in pre-booking state
+        "400":
+          description: "invalid input, object invalid"
+        "409":
+          description: a place reservation already exist
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PlaceReservationRequest"
+        description: places item to add
+
+  /place-reservations/{id}:
+    get:
+      tags:
+        - place-reservations
+      summary: searches place reservations
+      operationId: search_place_reservation
+      description: |
+        By passing in the appropriate options, you can search for
+        available place reservations in an inventory.
+      parameters:
+        - name: Access-Token
+          in: header
+          description: >-
+            OAuth2 token used to authenticate the consumer API. Refer to the implementation documentation
+            for information on how to get a token.
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: searchString
+          description: pass an optional search string for place reservations.
+          required: false
+          schema:
+            type: string
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          required: true
+          description: ID of the place reservation to get.
+      responses:
+        "200":
+          description: place reservation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PlaceReservation"
+        "400":
+          description: bad input parameter
+        "404":
+          description: place reservation not found
+        "418":
+          description: I'm a tea pot, would you like a tea instead?
+    patch:
+      tags:
+        - place-reservations
+      summary: Change state of place reservation to booked.
+      operationId: patch_place_reservations
+      description: >-
+        Change state of place reservation to booked.
+      parameters:
+        - name: Access-Token
+          in: header
+          description: >-
+            OAuth2 token used to authenticate the consumer API. Refer to the implementation documentation
+            for information on how to get a token.
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          required: true
+          description: ID of the booking to delete.
+      responses:
+        "201":
+          description: place reservation changed to booked
+        "400":
+          description: "invalid input, object invalid"
+        "404":
+          description: place reservation not found
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PlaceReservation"
+        description: places item to add
+    delete:
+      tags:
+        - place-reservations
+      summary: cancel a place reservation
+      operationId: delete_place_reservations
+      description: Cancel a place reservation.
+      parameters:
+        - name: Access-Token
+          in: header
+          description: >-
+            OAuth2 token used to authenticate the consumer API. Refer to the implementation documentation
+            for information on how to get a token.
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          required: true
+          description: ID of the place reservation to cancel.
+      responses:
+        "201":
+          description: place reservation deleted
+        "400":
+          description: "invalid input, object invalid"
+        "404":
+          description: place reservation not found
+
+components:
+  schemas:
+    PlaceReservationRequest:
+      type: object
+      required:
+        - name
+        - date
+      properties:
+        name:
+          type: string
+        phone:
+          type: string
+        date:
+          type: string
+          format: date-time
+
+    PlaceReservation:
+      type: object
+      required:
+        - id
+        - name
+        - dossier
+        - releaseDate
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        state:
+          type: string
+          enum:
+            - PRE-BOOKED
+            - BOOKED
+            - CANCELLED
+          default: PRE-BOOKED
+        creationDate:
+          type: string
+          format: date-time
+          example: "2016-08-29T09:12:33.001Z"
+        dossier:
+          $ref: "#/components/schemas/Dossier"
+
+    Dossier:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          example: ACME Corporation
+        phone:
+          type: string
+          example: 408-867-5309
