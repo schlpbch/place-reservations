@@ -16,10 +16,10 @@ from model import (
 
 # Data for our small world.
 
-dossier1 = Dossier(id="D1", phone="076 562 8114")
+dossier1 = Dossier(id="D0", phone="076 562 8114")
 
 place_reservation1 = PlaceReservation(
-    id="PR1",
+    id="PR0",
     state=PlaceReservationState.BOOKED,
     creationDate=str(datetime.datetime.now()),
     dossier=dossier1,
