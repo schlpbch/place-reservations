@@ -12,6 +12,7 @@ Dependencies
 ------------
 - fastapi >= 0.57.0
 - uvicorn >= 0.11.5
+- pydantic >= 1.7.3
 
 .. code-block:: bash
 
