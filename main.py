@@ -7,6 +7,7 @@ from fastapi.responses import JSONResponse
 from typing import List
 
 from model import (
+    PlaceAvailability,
     PlaceReservationRequest,
     PlaceReservation,
     PlaceReservationState,
@@ -15,6 +16,11 @@ from model import (
 
 
 # Data for our small world.
+
+place_availability1 = PlaceAvailability(id="A1")
+
+place_availabilities = {}
+place_availabilities[place_availability1.id] = place_availability1
 
 dossier1 = Dossier(id="D0", phone="076 562 8114")
 
@@ -35,13 +41,25 @@ place_reservations[place_reservation1.id] = place_reservation1
 app = FastAPI(
     description="A small API to Reserve Places.",
     title="API to Reserve Places in an Inventory",
-    version="0.0.1"
+    version="0.0.2",
 )
 
 
 @app.get("/", tags=["version"])
 def get_version():
-    return {"API to Reserve Places in an Inventory": "v.0.0.1"}
+    return {"API to Reserve Places in an Inventory": "v.0.0.2"}
+
+
+## Place-availabilities
+
+
+@app.get(
+    "/place-availabilities/",
+    response_model=List[PlaceAvailability],
+    tags=["place-availabilities"],
+)
+def read_place_availabilities():
+    return list(place_availabilities.value())
 
 
 ## Place-reservations

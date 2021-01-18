@@ -2,10 +2,10 @@ openapi: 3.0.3
 servers:
   # Added by API Auto Mocking Plugin
   - description: SwaggerHub API Auto Mocking
-    url: https://virtserver.swaggerhub.com/schlpbch/places-api/0.0.1
+    url: https://virtserver.swaggerhub.com/schlpbch/places-api/0.0.2
 info:
   description: This is a simple API
-  version: 0.0.1
+  version: 0.0.2
   title: API to Reserve Places in an Inventory.
   contact:
     email: andreas.schlapbach@sbb.ch
@@ -13,9 +13,42 @@ info:
     name: Apache 2.0
     url: "http://www.apache.org/licenses/LICENSE-2.0.html"
 tags:
-  - name: place-reservationss
+  - name: place-availabilities
+    description: Operations available to query availabilities 
+  - name: place-reservations
     description: Operations available to handle place reservations.
 paths:
+  /place-availabilities/:
+    get:
+      tags:
+        - /place-availabilities/
+      summary: query place availabilities
+      operationId: query_place_availabilities
+      description: |
+        lorem ipsum
+      parameters:
+        - name: Access-Token
+          in: header
+          description: >-
+            OAuth2 token used to authenticate the consumer API. Refer to the implementation documentation
+            for information on how to get a token.
+          required: true
+          schema:
+            type: string   
+      responses:
+        "200":
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PlaceAvailability"
+        "400":
+          description: bad input parameter
+        "404":
+          description: place reservation not found
+
   /place-reservations/:
     get:
       tags:
@@ -203,6 +236,14 @@ paths:
 
 components:
   schemas:
+    PlaceAvailability:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: string
+
     PlaceReservationRequest:
       type: object
       required:

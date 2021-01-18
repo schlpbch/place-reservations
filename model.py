@@ -3,6 +3,10 @@ from enum import Enum
 from pydantic import BaseModel
 
 
+class PlaceAvailability(BaseModel):
+    id: str
+
+
 class PlaceReservationRequest(BaseModel):
     name: str
     phone: str
@@ -21,7 +25,7 @@ class Dossier(BaseModel):
 
     def __eq__(self, other):
         return self.id == other.id
-        
+
 
 class PlaceReservation(BaseModel):
     id: str
@@ -31,5 +35,4 @@ class PlaceReservation(BaseModel):
 
     def __eq__(self, other):
         return self.id == other.id
-
 

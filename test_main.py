@@ -10,6 +10,11 @@ def test_read_main():
     assert response.status_code == 200
 
 
+def test_get_place_availabilities():
+    response = client.get("/place-availabilities/")
+    assert response.status_code == 200
+
+
 def test_get_place_reservations():
     response = client.get("/place-reservations/")
     assert response.status_code == 200
